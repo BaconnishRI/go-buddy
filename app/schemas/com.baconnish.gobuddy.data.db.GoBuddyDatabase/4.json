@@ -1,0 +1,140 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 4,
+    "identityHash": "8898bd150068241805506ae926c1ce7f",
+    "entities": [
+      {
+        "tableName": "tracked_pokemon",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nickname` TEXT NOT NULL, `speciesName` TEXT NOT NULL, `speciesDex` INTEGER, `kmPerCandy` REAL NOT NULL, `currentLevel` REAL NOT NULL, `targetLevel` REAL NOT NULL, `form` TEXT NOT NULL, `isLucky` INTEGER NOT NULL, `isCurrentBuddy` INTEGER NOT NULL, `hearts` INTEGER NOT NULL, `wantBestBuddy` INTEGER NOT NULL, `candyOwned` INTEGER NOT NULL, `candyXlOwned` INTEGER NOT NULL, `ivAtk` INTEGER, `ivDef` INTEGER, `ivSta` INTEGER, `createdAt` INTEGER NOT NULL, `priority` INTEGER NOT NULL, `hyperTrainingStat` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nickname",
+            "columnName": "nickname",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "speciesName",
+            "columnName": "speciesName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "speciesDex",
+            "columnName": "speciesDex",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "kmPerCandy",
+            "columnName": "kmPerCandy",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currentLevel",
+            "columnName": "currentLevel",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "targetLevel",
+            "columnName": "targetLevel",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "form",
+            "columnName": "form",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isLucky",
+            "columnName": "isLucky",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCurrentBuddy",
+            "columnName": "isCurrentBuddy",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hearts",
+            "columnName": "hearts",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wantBestBuddy",
+            "columnName": "wantBestBuddy",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "candyOwned",
+            "columnName": "candyOwned",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "candyXlOwned",
+            "columnName": "candyXlOwned",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ivAtk",
+            "columnName": "ivAtk",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "ivDef",
+            "columnName": "ivDef",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "ivSta",
+            "columnName": "ivSta",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "priority",
+            "columnName": "priority",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hyperTrainingStat",
+            "columnName": "hyperTrainingStat",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8898bd150068241805506ae926c1ce7f')"
+    ]
+  }
+}

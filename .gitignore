@@ -1,0 +1,14 @@
+.gradle/
+build/
+.kotlin/
+.idea/
+*.iml
+captures/
+local.properties
+*.jks
+*.keystore
+keystore.properties
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
