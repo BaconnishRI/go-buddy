@@ -37,6 +37,7 @@ import com.baconnish.gobuddy.GoBuddyApp
 import com.baconnish.gobuddy.R
 import com.baconnish.gobuddy.data.LiveScanProcessor
 import com.baconnish.gobuddy.data.ScanCapture
+import com.baconnish.gobuddy.domain.ScanConsensus
 import java.io.File
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -240,30 +241,23 @@ class OverlayScanService : Service() {
                 view?.visibility = View.INVISIBLE
                 delay(300)
                 val container = (application as GoBuddyApp).container
-                var best: ScanCapture? = null
-                repeat(3) { attempt ->
-                    if (best?.result?.cp == null) {
-                        if (attempt > 0) delay(300)
-                        val bitmap = acquireBitmap(reader) ?: return@repeat
-                        withContext(Dispatchers.IO) {
-                            try {
-                                File(getExternalFilesDir(null), "last_capture.png").outputStream().use {
-                                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
-                                }
-                            } catch (_: Exception) {
-                            }
-                        }
-                        val next = container.screenshotScanner.scan(bitmap)
-                        best = when {
-                            best == null -> next
-                            next.result.cp != null -> next
-                            best!!.result.isEmpty && !next.result.isEmpty -> next
-                            else -> best
-                        }
+                val frames = mutableListOf<ScanCapture>()
+                var attempts = 0
+                while (attempts < 3) {
+                    if (attempts > 0) delay(500)
+                    attempts++
+                    val bitmap = acquireBitmap(reader) ?: continue
+                    saveCapture(bitmap)
+                    val next = container.screenshotScanner.scan(bitmap)
+                    frames += next
+                    if (frames.size > 1 &&
+                        ScanConsensus.settled(frames[frames.size - 2].result, next.result)
+                    ) {
+                        break
                     }
                 }
                 view?.visibility = View.VISIBLE
-                val capture = best
+                val capture = frames.getOrNull(ScanConsensus.pick(frames.map { it.result }))
                 if (capture == null) {
                     Toast.makeText(this@OverlayScanService, "Couldn't capture the screen", Toast.LENGTH_LONG).show()
                     return@launch
@@ -275,6 +269,23 @@ class OverlayScanService : Service() {
             } finally {
                 view?.visibility = View.VISIBLE
                 scanning = false
+            }
+        }
+    }
+
+    private suspend fun saveCapture(bitmap: Bitmap) {
+        withContext(Dispatchers.IO) {
+            try {
+                val dir = getExternalFilesDir(null)
+                File(dir, "capture-3.png").delete()
+                for (i in 2 downTo 1) {
+                    val file = File(dir, "capture-$i.png")
+                    if (file.exists()) file.renameTo(File(dir, "capture-${i + 1}.png"))
+                }
+                File(dir, "capture-1.png").outputStream().use {
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+                }
+            } catch (_: Exception) {
             }
         }
     }

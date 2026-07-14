@@ -48,7 +48,13 @@ class ScreenshotScanner(
             )
         }
         try {
-            File(context.getExternalFilesDir(null), "last_scan.txt").writeText(
+            val dir = context.getExternalFilesDir(null)
+            File(dir, "scan-6.txt").delete()
+            for (i in 5 downTo 1) {
+                val file = File(dir, "scan-$i.txt")
+                if (file.exists()) file.renameTo(File(dir, "scan-${i + 1}.txt"))
+            }
+            File(dir, "scan-1.txt").writeText(
                 lines.joinToString("\n") + "\n---\n" + result,
             )
         } catch (_: Exception) {
