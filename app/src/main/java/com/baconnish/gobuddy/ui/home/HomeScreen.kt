@@ -1,5 +1,6 @@
 package com.baconnish.gobuddy.ui.home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,10 +43,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.baconnish.gobuddy.data.BuddyLevel
 import com.baconnish.gobuddy.data.TrainerSettings
-import com.baconnish.gobuddy.data.db.TrackedPokemon
 import com.baconnish.gobuddy.domain.BuddyCalculator
+import com.baconnish.gobuddy.domain.QuestPlanner
 import com.baconnish.gobuddy.ui.theme.buddyTierColor
 import com.baconnish.gobuddy.ui.theme.buddyTierIcon
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +60,8 @@ fun HomeScreen(
     onProfileClick: () -> Unit = {},
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory),
 ) {
-    val pokemon by viewModel.pokemon.collectAsState()
+    val quest by viewModel.quest.collectAsState()
+    val entries = quest?.entries ?: emptyList()
     val showOnboarding by viewModel.showOnboarding.collectAsState()
     val settings by viewModel.settings.collectAsState()
 
@@ -87,7 +92,7 @@ fun HomeScreen(
             }
         },
     ) { padding ->
-        if (pokemon.isEmpty()) {
+        if (entries.isEmpty()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -104,6 +109,7 @@ fun HomeScreen(
                 )
             }
         } else {
+            val next = entries.firstOrNull { it.days > 0 }
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -111,14 +117,18 @@ fun HomeScreen(
                 contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                items(pokemon, key = { it.id }) { p ->
+                quest?.let { q ->
+                    item(key = "summary") { PlanSummaryCard(q) }
+                }
+                items(entries, key = { it.pokemon.id }) { entry ->
                     PokemonCard(
-                        pokemon = p,
-                        isFirst = p.id == pokemon.first().id,
-                        isLast = p.id == pokemon.last().id,
-                        onClick = { onPokemonClick(p.id) },
-                        onAddHeart = { viewModel.addHeart(p) },
-                        onMove = { up -> viewModel.move(p, up) },
+                        entry = entry,
+                        isFirst = entry.pokemon.id == entries.first().pokemon.id,
+                        isLast = entry.pokemon.id == entries.last().pokemon.id,
+                        isNext = entry === next,
+                        onClick = { onPokemonClick(entry.pokemon.id) },
+                        onAddHeart = { viewModel.addHeart(entry.pokemon) },
+                        onMove = { up -> viewModel.move(entry.pokemon, up) },
                     )
                 }
             }
@@ -128,18 +138,32 @@ fun HomeScreen(
 
 @Composable
 private fun PokemonCard(
-    pokemon: TrackedPokemon,
+    entry: QuestPlanner.Entry,
     isFirst: Boolean,
     isLast: Boolean,
+    isNext: Boolean,
     onClick: () -> Unit,
     onAddHeart: () -> Unit,
     onMove: (Boolean) -> Unit,
 ) {
+    val pokemon = entry.pokemon
     val buddyLevel = BuddyLevel.fromHearts(pokemon.hearts)
     val heartsToBest = BuddyCalculator.heartsRemaining(pokemon.hearts)
 
-    Card(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
+    Card(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth(),
+        border = if (isNext) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
+    ) {
         Column(Modifier.padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 16.dp)) {
+            if (isNext) {
+                Text(
+                    "Up next",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(top = 8.dp),
+                )
+            }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     pokemon.displayName,
@@ -205,6 +229,58 @@ private fun PokemonCard(
                         .padding(end = 8.dp),
                     color = buddyTierColor(buddyLevel),
                     drawStopIndicator = {},
+                )
+            }
+            timelineText(entry)?.let { line ->
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    line,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+    }
+}
+
+private fun timelineText(entry: QuestPlanner.Entry): String? {
+    val bestBuddyDay = entry.bestBuddyDay
+    return when {
+        bestBuddyDay != null && entry.cumulativeDays > bestBuddyDay ->
+            "Best Buddy in ${days(bestBuddyDay)} (${dateAfter(bestBuddyDay)}), " +
+                "walking for candy until ${dateAfter(entry.cumulativeDays)}"
+        bestBuddyDay != null ->
+            "Best Buddy in ${days(bestBuddyDay)} (${dateAfter(bestBuddyDay)})"
+        entry.days > 0 ->
+            "Done in ${days(entry.cumulativeDays)} (${dateAfter(entry.cumulativeDays)})"
+        else -> null
+    }
+}
+
+@Composable
+private fun PlanSummaryCard(quest: QuestPlanner.Quest) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text("Your plan", style = MaterialTheme.typography.titleMedium)
+            Text(
+                if (quest.totalDays > 0) {
+                    "All goals done in ${days(quest.totalDays)}, around ${dateAfter(quest.totalDays)}"
+                } else {
+                    "Every goal is complete"
+                },
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            val parts = buildList {
+                if (quest.totalStardust > 0) add("${grouped(quest.totalStardust)} dust")
+                if (quest.totalCandyShort > 0) add("${grouped(quest.totalCandyShort)} candy short")
+                if (quest.totalCandyXlShort > 0) add("${grouped(quest.totalCandyXlShort)} XL short")
+                if (quest.totalHeartsToBest > 0) add("${grouped(quest.totalHeartsToBest)} hearts to go")
+            }
+            if (parts.isNotEmpty()) {
+                Text(
+                    parts.joinToString(" · "),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -273,3 +349,10 @@ private fun OnboardingDialog(
 
 internal fun formatLevel(level: Double): String =
     if (level == level.toInt().toDouble()) level.toInt().toString() else level.toString()
+
+private fun days(count: Int): String = if (count == 1) "~1 day" else "~$count days"
+
+private fun dateAfter(count: Int): String =
+    LocalDate.now().plusDays(count.toLong()).format(DateTimeFormatter.ofPattern("MMM d"))
+
+private fun grouped(value: Int): String = String.format(Locale.US, "%,d", value)

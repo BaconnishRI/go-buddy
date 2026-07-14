@@ -4,6 +4,7 @@ import com.baconnish.gobuddy.data.TrainerSettings
 import com.baconnish.gobuddy.data.db.TrackedPokemon
 import com.baconnish.gobuddy.domain.QuestPlanner
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -33,6 +34,11 @@ class QuestPlannerTest {
         assertEquals(quest.entries[1].cumulativeDays, quest.totalDays)
         assertTrue(quest.totalStardust > 0)
         assertEquals(300, quest.totalHeartsToBest)
+        assertNull(quest.entries[0].bestBuddyDay)
+        assertEquals(
+            quest.entries[0].days + quest.entries[1].plan.daysToBestBuddy,
+            quest.entries[1].bestBuddyDay,
+        )
     }
 
     @Test
@@ -44,5 +50,6 @@ class QuestPlannerTest {
         val quest = QuestPlanner.plan(listOf(done), settings)
         assertEquals(0, quest.totalDays)
         assertEquals(0, quest.totalStardust)
+        assertNull(quest.entries[0].bestBuddyDay)
     }
 }
