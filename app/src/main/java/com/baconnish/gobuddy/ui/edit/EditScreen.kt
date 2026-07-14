@@ -175,11 +175,11 @@ private fun EditForm(
                     prefill.ivSta?.let { ivStaText = it.toString() }
                     val message = when {
                         prefill.species == null ->
-                            "Scanned — pick the species, then use CP to find the level."
+                            "Scanned: pick the species, then use CP to find the level."
                         prefill.level != null ->
                             "Scanned: ${prefill.species.name}, level ${formatLevelInput(prefill.level)}."
                         prefill.cp != null ->
-                            "Scanned ${prefill.species.name} at CP ${prefill.cp} — add IVs to pin the level."
+                            "Scanned ${prefill.species.name} at CP ${prefill.cp}; add IVs to pin the level."
                         else -> "Scanned ${prefill.species.name}."
                     }
                     Toast.makeText(context, message, Toast.LENGTH_LONG).show()
@@ -214,7 +214,7 @@ private fun EditForm(
             Text("  Scan a screenshot")
         }
         Text(
-            "Take a screenshot of the Pokémon's screen in the game, then pick it here — " +
+            "Take a screenshot of the Pokémon's screen in the game, then pick it here: " +
                 "species, CP, level, and candy fill in automatically.",
             style = MaterialTheme.typography.bodySmall,
         )
@@ -260,7 +260,7 @@ private fun EditForm(
                     }
                     if (matches.isEmpty()) {
                         ListItem(
-                            headlineContent = { Text("No match — keep typing or use a custom name") },
+                            headlineContent = { Text("No match; keep typing or use a custom name") },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
@@ -363,7 +363,7 @@ private fun EditForm(
         )
         Text(
             "Only know how many hearts are left? Type that number and tap the tier " +
-                "you're working toward — the total fills in above.",
+                "you're working toward; the total fills in above.",
             style = MaterialTheme.typography.bodySmall,
         )
         Row(
@@ -535,14 +535,14 @@ private fun LevelFinderCard(
                                         ivAtk, ivDef, ivSta,
                                     )
                                     when (levels.size) {
-                                        0 -> "No level matches that CP and those IVs — double-check the numbers."
+                                        0 -> "No level matches that CP and those IVs; double-check the numbers."
                                         1 -> {
                                             onLevelFound(levels.first())
-                                            "Level ${formatLevelInput(levels.first())} — set above."
+                                            "Level ${formatLevelInput(levels.first())}; set above."
                                         }
                                         else -> {
                                             candidates = levels
-                                            "A few levels match — pick one:"
+                                            "A few levels match; pick one:"
                                         }
                                     }
                                 }
@@ -574,7 +574,7 @@ private fun LevelFinderCard(
                                 selected = false,
                                 onClick = {
                                     onLevelFound(level)
-                                    result = "Level ${formatLevelInput(level)} — set above."
+                                    result = "Level ${formatLevelInput(level)}; set above."
                                     candidates = emptyList()
                                 },
                                 label = { Text(formatLevelInput(level)) },

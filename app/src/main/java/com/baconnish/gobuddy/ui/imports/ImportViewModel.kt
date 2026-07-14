@@ -64,7 +64,7 @@ class ImportViewModel(
                         )
                         is ScanMatcher.Result.Ambiguous -> ImportRow(
                             label,
-                            "Could be ${match.candidates.joinToString(" or ") { it.displayName }} — " +
+                            "Could be ${match.candidates.joinToString(" or ") { it.displayName }}; " +
                                 "update it from its own screen instead.",
                         )
                         is ScanMatcher.Result.Matched -> {

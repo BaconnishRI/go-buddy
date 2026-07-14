@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
             OverlayScanService.start(this, result.resultCode, data)
             Toast.makeText(
                 this,
-                "Overlay on — switch to Pokémon GO and tap the bubble to scan.",
+                "Overlay on; switch to Pokémon GO and tap the bubble to scan.",
                 Toast.LENGTH_LONG,
             ).show()
         }

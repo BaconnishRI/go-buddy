@@ -55,7 +55,7 @@ class ProfileViewModel(
                 }
                 "Backed up ${pokemon.size} Pokémon."
             } catch (_: Exception) {
-                "Backup failed — try a different location."
+                "Backup failed; try a different location."
             }
             onDone(message)
         }

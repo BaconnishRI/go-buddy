@@ -28,20 +28,20 @@ class LiveScanProcessor(
                     if (parts.isEmpty()) "already up to date" else parts.joinToString(", ")
             }
             is ScanMatcher.Result.Ambiguous ->
-                "Could be ${match.candidates.joinToString(" or ") { it.displayName }} — " +
+                "Could be ${match.candidates.joinToString(" or ") { it.displayName }}; " +
                     "update it in Go Buddy"
             ScanMatcher.Result.NoMatch ->
                 if (scan.hpMax != null && (scan.cp != null || scan.ivAtk != null)) {
                     addNew(scan)
                 } else {
-                    "That didn't look like a Pokémon's info screen — open the Pokémon and tap again"
+                    "That didn't look like a Pokémon's info screen; open the Pokémon and tap again"
                 }
         }
     }
 
     private suspend fun addNew(scan: ScanResult): String {
         val sp = SpeciesResolver.resolve(scan, species.all)
-            ?: return "Not tracked — couldn't identify the species from this screen"
+            ?: return "Not tracked; couldn't identify the species from this screen"
         var pokemon = TrackedPokemon(
             speciesName = sp.name,
             speciesDex = sp.dex,

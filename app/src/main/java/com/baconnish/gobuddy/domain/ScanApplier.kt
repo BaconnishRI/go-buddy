@@ -90,7 +90,7 @@ object ScanApplier {
                         }
                     }
                     0 -> notes.add("CP ${scan.cp} doesn't match the stored IVs")
-                    else -> notes.add("level ambiguous — set IVs to pin it down")
+                    else -> notes.add("level ambiguous; set IVs to pin it down")
                 }
             }
         } else if (species != null && scan.hpMax != null) {

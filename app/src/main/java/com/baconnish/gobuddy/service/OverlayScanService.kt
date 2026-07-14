@@ -271,7 +271,7 @@ class OverlayScanService : Service() {
                 val message = proc.process(capture)
                 Toast.makeText(this@OverlayScanService, message, Toast.LENGTH_LONG).show()
             } catch (_: Exception) {
-                Toast.makeText(this@OverlayScanService, "Scan failed — try again", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@OverlayScanService, "Scan failed; try again", Toast.LENGTH_LONG).show()
             } finally {
                 view?.visibility = View.VISIBLE
                 scanning = false
