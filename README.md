@@ -12,20 +12,20 @@ the game or your account.
 
 ## What it does
 
-- **Finds a Pokémon's level and IVs** — scan a screenshot (or use the
+- **Finds a Pokémon's level and IVs**: Scan a screenshot (or use the
   floating overlay while playing) and Go Buddy reads the CP, HP, and
   appraisal bars to work out the exact level and IVs.
-- **Plans your power-ups** — exact stardust, candy, and Candy XL costs to
+- **Plans your power-ups**: Exact stardust, candy, and Candy XL costs to
   your target level, with Shadow, Purified, and Lucky pricing.
-- **Plans your walking** — km per candy for every species, distance left
+- **Plans your walking**: Km per candy for every species, distance left
   at normal vs. excited mood, and days at your own pace.
-- **Tracks Best Buddy progress** — hearts, tiers, and time estimates, with
+- **Tracks Best Buddy progress**: Hearts, tiers, and time estimates, with
   one-tap heart logging.
-- **Tracks Hyper Training** — Bottle Cap stat progress and the CP payoff
+- **Tracks Hyper Training**: Bottle Cap stat progress and the CP payoff
   when maxed.
-- **Plans the whole quest** — order your Pokémon by priority and see what
+- **Plans the whole quest**: Order your Pokémon by priority and see what
   everything costs end to end.
-- **Keeps your data yours** — everything stays on your phone; export and
+- **Keeps your data yours**: Everything stays on your phone; export and
   import a backup file whenever you like. No accounts, no analytics, no
   network access.
 
