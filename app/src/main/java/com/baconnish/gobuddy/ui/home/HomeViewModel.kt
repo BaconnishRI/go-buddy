@@ -11,7 +11,9 @@ import com.baconnish.gobuddy.data.SettingsRepository
 import com.baconnish.gobuddy.data.TrainerSettings
 import com.baconnish.gobuddy.data.db.PokemonDao
 import com.baconnish.gobuddy.data.db.TrackedPokemon
+import com.baconnish.gobuddy.domain.QuestPlanner
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -22,8 +24,11 @@ class HomeViewModel(
     private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
 
-    val pokemon: StateFlow<List<TrackedPokemon>> = dao.observeAll()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    val quest: StateFlow<QuestPlanner.Quest?> = combine(
+        dao.observeAll(),
+        settingsRepository.settings,
+    ) { list, settings -> QuestPlanner.plan(list, settings) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     val showOnboarding: StateFlow<Boolean> = settingsRepository.onboarded
         .map { !it }
@@ -43,7 +48,7 @@ class HomeViewModel(
     }
 
     fun move(target: TrackedPokemon, up: Boolean) {
-        val list = pokemon.value
+        val list = quest.value?.entries?.map { it.pokemon } ?: return
         val index = list.indexOfFirst { it.id == target.id }
         if (index < 0) return
         val neighbor = list.getOrNull(index + if (up) -1 else 1) ?: return

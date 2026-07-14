@@ -10,6 +10,7 @@ object QuestPlanner {
         val plan: GoalPlan,
         val days: Int,
         val cumulativeDays: Int,
+        val bestBuddyDay: Int?,
     )
 
     data class Quest(
@@ -42,8 +43,16 @@ object QuestPlanner {
                 goalPlan.walkDaysNormal,
                 if (p.wantBestBuddy) goalPlan.daysToBestBuddy else 0,
             )
+            val start = cumulative
             cumulative += days
-            Entry(p, goalPlan, days, cumulative)
+            val bestBuddyDay = if (
+                p.wantBestBuddy && goalPlan.heartsToBest > 0 && goalPlan.daysToBestBuddy > 0
+            ) {
+                start + goalPlan.daysToBestBuddy
+            } else {
+                null
+            }
+            Entry(p, goalPlan, days, cumulative, bestBuddyDay)
         }
         return Quest(
             entries = entries,
