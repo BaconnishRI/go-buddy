@@ -20,8 +20,8 @@ android {
         applicationId = "com.baconnish.gobuddy"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
-        versionName = "0.1.0-dev"
+        versionCode = 2
+        versionName = "0.1.1-dev"
     }
 
     signingConfigs {
