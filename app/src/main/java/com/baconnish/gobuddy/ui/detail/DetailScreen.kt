@@ -181,7 +181,7 @@ private fun ReachabilityCard(pokemon: TrackedPokemon, plan: GoalPlan) {
     val warnings = buildList {
         if (!plan.targetReachableNow) {
             add(
-                "Level ${fmt(pokemon.targetLevel)} is out of reach right now — a Pokémon can only " +
+                "Level ${fmt(pokemon.targetLevel)} is out of reach right now; a Pokémon can only " +
                     "be powered up to your trainer level + ${GameData.ALLOWED_LEVELS_ABOVE_PLAYER} " +
                     "(cap ${fmt(GameData.MAX_POKEMON_LEVEL)}). You can currently reach " +
                     "${fmt(plan.maxLevelAllowed)}; you'd need trainer level ${plan.trainerLevelNeeded}.",
@@ -242,11 +242,11 @@ private fun HyperTrainingCard(
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text("Hyper Training — ${stat.label}", style = MaterialTheme.typography.titleMedium)
+            Text("Hyper Training: ${stat.label}", style = MaterialTheme.typography.titleMedium)
             when {
                 pokemon.form == PokemonForm.SHADOW ->
                     Text(
-                        "Shadow Pokémon can't be Hyper Trained — purify it first.",
+                        "Shadow Pokémon can't be Hyper Trained; purify it first.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.error,
                     )
@@ -290,7 +290,7 @@ private fun HyperTrainingCard(
                         StatRow("CP when maxed", grouped(hyperTrainedCp))
                     }
                     Text(
-                        "Each completed training stage in the game raises the IV by 1 — " +
+                        "Each completed training stage in the game raises the IV by 1; " +
                             "tap +1 here when you finish one, or just rescan the appraisal screen.",
                         style = MaterialTheme.typography.bodySmall,
                     )

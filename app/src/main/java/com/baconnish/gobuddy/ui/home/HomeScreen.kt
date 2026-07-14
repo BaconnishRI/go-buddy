@@ -99,7 +99,7 @@ fun HomeScreen(
                 Text("No Pokémon tracked yet", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    "Tap + to add a Pokémon and set a goal — a target level, Best Buddy, or both.",
+                    "Tap + to add a Pokémon and set a goal: a target level, Best Buddy, or both.",
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
@@ -184,7 +184,7 @@ private fun PokemonCard(
                         if (heartsToBest == 0) {
                             "Best Buddy!"
                         } else {
-                            "${buddyLevel.label} — $heartsToBest hearts to Best"
+                            "${buddyLevel.label}: $heartsToBest hearts to Best"
                         },
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.weight(1f),
@@ -226,7 +226,7 @@ private fun OnboardingDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    "Three quick things about you — they drive every cost and time " +
+                    "Three quick things about you; they drive every cost and time " +
                         "estimate in the app. You can change them anytime from the " +
                         "profile page.",
                     style = MaterialTheme.typography.bodyMedium,

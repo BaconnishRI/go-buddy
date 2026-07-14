@@ -64,7 +64,7 @@ To build a signed release, copy `keystore.properties.example` to
 
 ## License
 
-[PolyForm Noncommercial 1.0.0](LICENSE.md) — use it, change it, share it,
+[PolyForm Noncommercial 1.0.0](LICENSE.md): use it, change it, share it,
 but don't sell it. This keeps Go Buddy free for the community, always.
 
 Required Notice: Copyright (c) 2026 BaconnishRI

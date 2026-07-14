@@ -110,7 +110,7 @@ private fun AboutCard() {
             StatRow("Build type", BuildConfig.BUILD_TYPE)
             StatRow("Game data updated", GameData.DATA_UPDATED)
             Text(
-                "Go Buddy is in early development — expect rough edges, and export a " +
+                "Go Buddy is in early development; expect rough edges, and export a " +
                     "backup before updating.",
                 style = MaterialTheme.typography.bodySmall,
             )
